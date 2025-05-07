@@ -1,6 +1,6 @@
 from typing import Optional, List
 from contextlib import asynccontextmanager
-
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 import httpx
@@ -98,7 +98,12 @@ def delete_listing(listing_id: int, session: Session = Depends(get_session)):
     session.delete(lst); session.commit()
     return {"ok": True}
 
-
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["http://localhost:3000"],
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
 
 
 REMOTIVE_ENDPOINT = "https://remotive.io/api/remote-jobs"
